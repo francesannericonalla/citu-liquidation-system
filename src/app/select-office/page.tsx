@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AuthCard } from "@/components/AuthCard";
 import { selectOfficeAction } from "@/features/auth/actions";
-import { useEffect } from "react";
 
 interface Office {
   id: string;
@@ -12,17 +11,14 @@ interface Office {
   short_code: string;
 }
 
-export default function SelectOfficePage() {
-  const [offices, setOffices] = useState<Office[]>([]);
+interface Props {
+  offices: Office[];
+}
+
+function SelectOfficeForm({ offices }: Props) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-
-  useEffect(() => {
-    fetch("/api/offices")
-      .then((r) => r.json())
-      .then(setOffices);
-  }, []);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -76,4 +72,46 @@ export default function SelectOfficePage() {
       </form>
     </AuthCard>
   );
+}
+
+// Client wrapper that fetches offices on mount
+export default function SelectOfficePage() {
+  const [offices, setOffices] = useState<Office[] | null>(null);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/offices")
+      .then(async (r) => {
+        const text = await r.text();
+        console.log("[select-office] /api/offices status:", r.status, "body:", text);
+        if (!r.ok) throw new Error(`HTTP ${r.status}: ${text}`);
+        const data = JSON.parse(text);
+        if (!Array.isArray(data) || data.length === 0) throw new Error("Empty list returned");
+        setOffices(data);
+      })
+      .catch((e) => {
+        console.error("[select-office] fetch failed:", e);
+        setFetchError(String(e));
+      });
+  }, []);
+
+  if (fetchError) {
+    return (
+      <AuthCard title="Select Your Office">
+        <p className="rounded-md bg-red-50 px-3 py-2 text-xs text-red-700">
+          Failed to load offices: {fetchError}
+        </p>
+      </AuthCard>
+    );
+  }
+
+  if (offices === null) {
+    return (
+      <AuthCard title="Select Your Office">
+        <p className="text-sm text-ink/60">Loading offices…</p>
+      </AuthCard>
+    );
+  }
+
+  return <SelectOfficeForm offices={offices} />;
 }
