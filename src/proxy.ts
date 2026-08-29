@@ -15,7 +15,7 @@ export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;
 
   // Always pass through public routes and Next.js/auth internals.
-  if (PUBLIC.has(pathname) || pathname.startsWith("/api/auth") || pathname === "/api/offices") {
+  if (PUBLIC.has(pathname) || pathname.startsWith("/api/auth") || pathname === "/api/offices" || pathname === "/api/cron/purge") {
     return NextResponse.next();
   }
 

@@ -7,7 +7,8 @@ const NAV_LINKS = [
   { label: "Liquidations", path: "/liquidations", roles: ["Encoder", "Admin"] },
   { label: "Repository",   path: "/repository",   roles: ["Encoder", "Admin"] },
   { label: "Dashboard",    path: "/dashboard",    roles: ["Encoder", "Admin"] },
-  { label: "Admin",        path: "/admin/approvals", roles: ["Admin"] },
+  { label: "Approvals",    path: "/admin/approvals", roles: ["Admin"] },
+  { label: "Users",        path: "/admin/users",     roles: ["Admin"] },
 ] as const;
 
 interface Props {

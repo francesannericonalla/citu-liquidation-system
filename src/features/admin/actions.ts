@@ -80,3 +80,18 @@ export async function deactivateUserAction(userId: string): Promise<ActionResult
   revalidatePath("/admin/users");
   return { success: true };
 }
+
+// ── Reactivate user ───────────────────────────────────────────────────────────
+
+export async function reactivateUserAction(userId: string): Promise<ActionResult> {
+  const admin = await requireAdmin();
+  if (!admin) return { success: false, error: "Unauthorized." };
+
+  await db.user.update({
+    where: { id: userId },
+    data: { account_status: "active" },
+  });
+
+  revalidatePath("/admin/users");
+  return { success: true };
+}
