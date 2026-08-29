@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+/* ── Brand design tokens ─────────────────────────────────────────────────── */
+
+:root {
+  --color-bg:           #FFFFFF;
+  --color-bg-subtle:    #FAF6E8;
+  --color-maroon:       #7A1128;
+  --color-maroon-dark:  #4A0A18;
+  --color-gold:         #F5B301;
+  --color-ink:          #241412;
+  --color-border:       #E8E0CE;
+}
+
+/* ── Tailwind v4 theme extension ─────────────────────────────────────────── */
+
+@theme inline {
+  /* Colours */
+  --color-bg:          var(--color-bg);
+  --color-bg-subtle:   var(--color-bg-subtle);
+  --color-maroon:      var(--color-maroon);
+  --color-maroon-dark: var(--color-maroon-dark);
+  --color-gold:        var(--color-gold);
+  --color-ink:         var(--color-ink);
+  --color-border:      var(--color-border);
+
+  /* Typography */
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ── Base styles ─────────────────────────────────────────────────────────── */
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* ── Tabular-nums utility ────────────────────────────────────────────────── */
+/* Apply to any column showing money amounts so figures align vertically.    */
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
